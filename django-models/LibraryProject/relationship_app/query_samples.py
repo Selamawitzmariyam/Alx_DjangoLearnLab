@@ -23,7 +23,7 @@ def get_books_in_library(library_name):
 
 # Query 3: Retrieve the librarian of a specific library
 def get_librarian_for_library(library_name):
-    library =Librarian.objects.get(library)
+    library ="Librarian.objects.get(library="
     if library and hasattr(library, 'librarian'):
         return library.librarian
     return None
