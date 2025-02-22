@@ -1,6 +1,20 @@
+
+from django.shortcuts import render, redirect
+from django.views.generic import DetailView
+from .models import Book, Library
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.shortcuts import render, redirect
+# Function-Based View (FBV)
+def book_list(request):
+    books = Book.objects.all()
+    return render(request, 'relationship_app/book_list.html', {'books': books})
+
+# Class-Based View (CBV)
+class LibraryDetailView(DetailView):
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
+
 
 # User Login View
 def login_view(request):
