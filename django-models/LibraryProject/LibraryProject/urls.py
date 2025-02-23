@@ -1,3 +1,4 @@
+
 """
 URL configuration for LibraryProject project.
 
@@ -25,4 +26,7 @@ urlpatterns = [
     path('admin-view/', admin_view, name='admin_view'),
     path('librarian-view/', librarian_view, name='librarian_view'),
     path('member-view/', member_view, name='member_view'),
+    path('books/', book_list, name='book_list'), 
+    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'), 
 ]
+
