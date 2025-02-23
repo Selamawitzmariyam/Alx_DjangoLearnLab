@@ -1,7 +1,8 @@
-from django.urls import path
-from .views import book_list, LibraryDetailView
+
+from django.contrib import admin
+from django.urls import path, include  # Include is necessary to reference app URLs
 
 urlpatterns = [
-    path('books/', views.book_list, name='book_list'),  # Function-based view
-    path('library/, views.LibraryDetailView, name='library_detail')
+    path('admin/', admin.site.urls),
+    path('relationship/', include('relationship_app.urls')),  # Include the app's URLs
 ]
