@@ -9,8 +9,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 # Function-Based View (FBV)
 def book_list(request):
     books = Book.objects.all()
-    book_list_text = "\n".join([f"{book.title} - {book.author}" for book in books])  # Format as text
-    return render(request, 'relationship_app/book_list.html', {'books': books})
+     context = {'book.title': books,' book.author.name': books}  # Create a context dictionary with book list
+      return render(request, 'books/book_list.html', context)
 # Class-Based View (CBV)
 class LibraryDetailView(DetailView):
     model = Library
