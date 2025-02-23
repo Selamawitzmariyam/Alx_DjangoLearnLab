@@ -10,6 +10,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/book_list.html', {'books': books})
+    book_list_text = "\n".join([f"{book.title} - {book.author}" for book in books])  # Format as text
+    return HttpResponse(book_list_text, content_type="text/plain")
 
 # Class-Based View (CBV)
 class LibraryDetailView(DetailView):
