@@ -1,4 +1,8 @@
+from django.urls import path
 
+urlpatterns = [
+    path('books/', book_list, name='book_list'),  # Function-based view
+    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail')
 """
 URL configuration for LibraryProject project.
 
@@ -18,8 +22,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import register, user_login, user_logout
-from django.urls import path
-from .views import LibraryDetailView
+from .views import book_list, LibraryDetailView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', login_view, name='login'),
