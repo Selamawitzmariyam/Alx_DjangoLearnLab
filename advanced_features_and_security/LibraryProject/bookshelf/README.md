@@ -6,9 +6,9 @@
 ## Step 2: Groups and Permissions
 - Created groups: **Editors**, **Viewers**, and **Admins**.
 - Assigned permissions:
-  - **Viewers:** can view articles.
-  - **Editors:** can view, create, and edit articles.
-  - **Admins:** can view, create, edit, and delete articles.
+  - **Viewers:** can view journals.
+  - **Editors:** can view, create, and edit journals.
+  - **Admins:** can view, create, edit, and delete journals.
 
 ## Step 3: Enforcing Permissions
 - Used `@permission_required` decorators in views to restrict access.
