@@ -14,8 +14,9 @@ SECRET_KEY = 'django-insecure-&4-b$bz=08msak!b7d7c4baa)w4hqzk*g-(b+$j*j*7&%rvnr(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+DEBUG = False
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -42,6 +43,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'csp.middleware.CSPMiddleware',  # Ensure django-csp is installed
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -135,11 +137,17 @@ SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 31536000  # 1 year for HSTS
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
-
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP traffic to HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow preloading of HSTS by browsers
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key')
 # Cookie security
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-
+CSRF_COOKIE_SECURE = True          # Send CSRF cookies only over HTTPS
+SESSION_COOKIE_SECURE = True       # Send session cookies only over HTTPS
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 # Browser-side security headers
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
