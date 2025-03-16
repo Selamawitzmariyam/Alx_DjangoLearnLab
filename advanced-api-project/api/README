@@ -1,0 +1,27 @@
+1. **Book List View** (`GET /books/`):
+   - Retrieves all books in the system.
+   - Accessible to both authenticated and unauthenticated users.
+
+2. **Book Detail View** (`GET /books/<id>/`):
+   - Retrieves a single book's details by its ID.
+   - Accessible to both authenticated and unauthenticated users.
+
+3. **Create a New Book** (`POST /books/create/`):
+   - Allows authenticated users to create a new book.
+   - Only authenticated users can create books.
+
+4. **Update an Existing Book** (`PUT/PATCH /books/<id>/update/`):
+   - Allows authenticated users to update an existing book.
+   - Only authenticated users can update books.
+
+5. **Delete a Book** (`DELETE /books/<id>/delete/`):
+   - Allows authenticated users to delete a book.
+   - Only authenticated users can delete books.
+
+## Permissions
+- **AllowAny**: Used for views where no authentication is required (e.g., Book List and Book Detail).
+- **IsAuthenticated**: Used for views where only authenticated users can access (e.g., Create, Update, and Delete views).
+- **IsStaffOrReadOnly**: A custom permission that restricts write access to staff members 
+
+## Authentication
+This API uses token-based authentication, which requires users to provide a valid token for any write operations (create, update, delete).
