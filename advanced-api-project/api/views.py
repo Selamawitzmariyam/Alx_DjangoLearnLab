@@ -8,6 +8,7 @@ from .serializers import BookSerializer
 from rest_framework import filters
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.filters import SearchFilter,OrderingFilter
+from django_filters import rest_framework
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
