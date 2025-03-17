@@ -25,3 +25,29 @@
 
 ## Authentication
 This API uses token-based authentication, which requires users to provide a valid token for any write operations (create, update, delete).
+1. Filtering
+      Implemented using DjangoFilterBackend.
+      Supports exact matches and range filtering.
+      Configured with filterset_fields.
+2. Searching
+     Implemented using SearchFilter.
+     Allows users to search books by title and author__name.
+3. Ordering
+     Implemented using OrderingFilter.
+     Supports ordering by title and publication_year.
+Example API Requests
+Searching for a book by title
+    GET /api/books/?search=coder
+    This will return all books where the title contains "coder".
+Filtering books by author
+    GET /api/books/?author=Joseph
+    Retrieves books written by John Doe.
+Filtering books by publication year
+    GET /api/books/?publication_year=2020
+    Returns books published in the year 2020.
+Ordering books by title (ascending)
+    GET /api/books/?ordering=title
+    Sorts books alphabetically by title.
+Ordering books by publication year (descending)
+    GET /api/books/?ordering=-publication_year
+    Sorts books from newest to oldest.
