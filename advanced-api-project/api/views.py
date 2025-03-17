@@ -6,12 +6,16 @@ from datetime import datetime
 from .models import Book
 from .serializers import BookSerializer
 from rest_framework import filters
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.filters import SearchFilter,OrderingFilter
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    filter_backends = [filters.SearchFilter]  
+     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     search_fields = ['title', 'author__name']
     permission_classes = [permissions.AllowAny]
+    ordering_fields = ['title', 'publication_year']  # Fields that can be used for ordering
+    ordering = ['title']
 class BookDetailView(generics.RetrieveAPIView):
     """
     This view handles the retrieval of a single book by its ID.
@@ -34,6 +38,10 @@ class BookCreateView(generics.CreateAPIView):
             return Response({"error": "Publication year cannot be in the future."}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save(author=self.request.user)
+        filter_backends = [SearchFilter]  # Enable search functionality
+        search_fields = ['title', 'author__name'] 
+        ordering_fields = ['title', 'publication_year']  # Fields that can be used for ordering
+        ordering = ['title']
 class BookUpdateView(generics.UpdateAPIView):
     """
     This view handles the updating of an existing book in the system.
