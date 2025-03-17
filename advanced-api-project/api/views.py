@@ -1,4 +1,5 @@
 from rest_framework import generics, permissions
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
