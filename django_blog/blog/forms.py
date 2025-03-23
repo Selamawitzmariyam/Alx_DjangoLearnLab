@@ -4,13 +4,15 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Comment
 from .models import Post
 from blog.widgets import TagWidget 
-from taggit.forms import TagWidget
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+        widgets = {
+            'tags': TagWidget(), 
+        }
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
