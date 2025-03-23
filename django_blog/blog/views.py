@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db import Post
 from .models import  Comment
-from .forms import CommentForm
+from .forms import CommentForm,CommentCreateView
 from django.urls import reverse_lazy
 
 def register(request):
