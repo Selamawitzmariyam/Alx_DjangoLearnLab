@@ -24,6 +24,16 @@ def register(request):
 @login_required
 def profile(request):
     return render(request, 'blog/profile.html')
+
+def search_posts(request):
+    query = request.GET.get('q', '')  # Get search query from URL
+    results = Post.objects.filter(
+        (title__icontains=query),
+        (content__icontains=query) |
+        (tags__name__icontains=query)
+    ).distinct()  # Avoid duplicates
+
+    return render(request, 'blog/search_results.html', {'query': query, 'results': results})
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'  # Default: <app>/<model>_list.html
@@ -141,3 +151,12 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.id})
+class PostListByTagView(ListView):
+    model = Post
+    template_name = "blog/post_list.html"
+    context_object_name = "post_list"
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        self.tag = get_object_or_404(Tag, slug=tag_slug)
+        return Post.objects.filter(tags__in=[self.tag])
