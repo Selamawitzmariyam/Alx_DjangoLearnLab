@@ -1,4 +1,6 @@
 from django import render
+from django.shortcuts import render, redirect
+
 
 
 from django.views.generic.detail import DetailView
@@ -14,7 +16,8 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)  # Log the user in after successful registration
-            return redirect('book_list')  # Redirect to book list or another view after registration
+            return render(request, 'relationship_app/register.html', {'form': form})
+
     else:
         form = UserCreationForm()
 def book_list(request):
