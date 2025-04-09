@@ -1,3 +1,8 @@
+
+from django import render
+from django.shortcuts import render, redirect
+
+
 from django.views.generic.detail import DetailView
 from django.views.generic import DetailView
 from django.shortcuts import render,redirect
@@ -14,7 +19,8 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)  # Log the user in after successful registration
-            return redirect('book_list')  # Redirect to book list or another view after registration
+            return render(request, 'relationship_app/register.html', {'form': form})
+
     else:
         form = UserCreationForm()
         """
@@ -24,7 +30,7 @@ class SignupView(UserCreationForm):
     template_name = 'templates/registrations/signup.html'
 def book_list(request):
     books = Book.objects.all()  # Fetch all books
-    return render(request, 'relationship_app/templates/list_books.html', {'books': books})
+    return render(request, 'relationship_app/list_books.html', {'books': books})
 class LibraryDetailView(DetailView):
     model = Library
     template_name = "relationship_app/library_detail.html"  # Ensure this template exists
