@@ -1,13 +1,13 @@
-from django import render
-
-
 from django.views.generic.detail import DetailView
 from django.views.generic import DetailView
-from django.shortcuts import ,redirect
+from django.shortcuts import render,redirect
 from .models import Book  # Import the Book model
 from .models import Library
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
+from django.contrib.auth.views import login
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
+"""
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -17,10 +17,15 @@ def register(request):
             return redirect('book_list')  # Redirect to book list or another view after registration
     else:
         form = UserCreationForm()
+        """
+class SignupView(UserCreationForm):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'templates/registrations/signup.html'
 def book_list(request):
     books = Book.objects.all()  # Fetch all books
     return render(request, 'relationship_app/templates/list_books.html', {'books': books})
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = "relationship_app/templates/library_detail.html"  # Ensure this template exists
+    template_name = "relationship_app/library_detail.html"  # Ensure this template exists
     context_object_name = "library"
