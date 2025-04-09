@@ -1,10 +1,13 @@
 from django.urls import path, include
-from .views import SignUpView
+from .views import Register
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('accounts/', include('django.contrib.auth.urls')),  # Django's built-in auth routes
-
-    path('signup/', views.register,name='register'),    # Custom registration
-
+  
+    path('login',LoginView.as_view(template_name='login.html',name ='login'),
+    path('login',LogoutView.as_view(template_name='logout.html',name ='login'),
+    path('signup/', SignUpView.as_view(), name='signup'),    # Custom registration
+    path('accounts/register/',                                
+         TemplateView.as_view(template_name='relationship_app/register.html'),
+         name='profile'),
 ]
