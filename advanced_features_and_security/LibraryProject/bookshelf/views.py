@@ -2,8 +2,20 @@ from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from .models import journal,Post
-
+from .forms import SearchForm 
 from .models import Book
+def book_search(request):
+    form = SearchForm(request.GET or None)
+    books = Book.objects.none()  # start with an empty QuerySet
+
+    if form.is_valid():
+        query = form.cleaned_data.get('query')
+        # Use Django's ORM which parameterizes queries and mitigates SQL injection risks
+        books = Book.objects.filter(title__icontains=query)
+
+    return render(request, 'bookshelf/book_list.html', {
+        'form': form,
+        'books': books,
 
 def book_list(request):
     books = Book.objects.all()
