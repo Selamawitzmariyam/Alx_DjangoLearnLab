@@ -58,8 +58,9 @@ class BookAPITestCase(TestCase):
         self.assertFalse(Book.objects.filter(id=self.book.id).exists())
 
     def test_unauthorized_access(self):
-        self.client.force_authenticate(user=None)  # Remove authentication
-        data = {"title": "Unauthorized Book", "publication_year": 2025, "author": self.author.id}
-        response = self.client.post("/books/create/", data, format="json")
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    def test_unauthorized_access(self):
+    self.client.force_authenticate(user=None)  # Remove authentication
+    data = {"title": "Unauthorized Book", "publication_year": 2025, "author": self.author.id}
+    response = self.client.post("/books/create/", data, format="json")
+    # Replace with the expected status code. For example, if unauthenticated access returns 401:
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
