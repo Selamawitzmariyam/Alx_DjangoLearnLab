@@ -3,8 +3,6 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 
-User = get_user_model()
-
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)
     email = serializers.CharField(required=True)
@@ -12,7 +10,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('username', 'email', 'password', 'password2', 'bio', 'profile_picture')
 
     def validate(self, attrs):
@@ -21,13 +19,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        validated_data.pop('password2')
-        user = User.objects.create_user(
+        validated_data.pop('password2', None)  # Remove password2
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password'],
             bio=validated_data.get('bio', ''),
             profile_picture=validated_data.get('profile_picture', None)
         )
-        Token.objects.create(user=user)
-        return user
+
+        # Generate and return token for the user
+        token = Token.objects.create(user=user)
+        return user, token
