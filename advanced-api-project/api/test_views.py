@@ -10,7 +10,7 @@ class BookAPITestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(username="testuser", password="password12345")
-
+        self.client.login(username="testuser", password="password12345")
         # Authenticate user
         self.client.force_authenticate(user=self.user)
 
