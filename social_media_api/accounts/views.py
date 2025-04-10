@@ -50,7 +50,7 @@ class LoginUserView(generics.GenericAPIView):
 CustomUser = get_user_model()
 
 class FollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = IsAuthenticated
 
     def post(self, request, user_id):
         # Get the user to follow
@@ -67,7 +67,7 @@ class FollowUserView(APIView):
         return Response({"detail": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
 
 class UnfollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = IsAuthenticated
 
     def post(self, request, user_id):
         # Get the user to unfollow
