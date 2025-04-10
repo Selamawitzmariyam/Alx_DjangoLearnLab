@@ -1,13 +1,40 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
-from django.shortcuts import get_object_or_404, render, redirect
-from .models import journal
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import permission_required
+from .models import journal,Post
+@permission_required('yourapp.can_view', raise_exception=True)
+def post_list(request):
+    posts = Post.objects.all()
+    return render(request, 'posts/list.html', {'posts': posts})
 
+@permission_required('yourapp.can_create', raise_exception=True)
+def post_create(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        Post.objects.create(title=title, content=content)
+        return redirect('post_list')
+    return render(request, 'posts/create.html')
+
+@permission_required('yourapp.can_edit', raise_exception=True)
+def post_edit(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        post.title = request.POST.get('title')
+        post.content = request.POST.get('content')
+        post.save()
+        return redirect('post_list')
+    return render(request, 'posts/edit.html', {'post': post})
+
+@permission_required('yourapp.can_delete', raise_exception=True)
+def post_delete(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.delete()
+    return redirect('post_list')
 @permission_required('bookshelf.can_view', raise_exception=True)
 def article_list(request):
     journal = journal.objects.all()
     return render(request, 'bookshelf/journal_list.html', {'journal': journals})
-
 @permission_required('bookshelf.can_create', raise_exception=True)
 def journal_create(request):
     if request.method == 'POST':
