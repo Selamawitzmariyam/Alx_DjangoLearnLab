@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example Form</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Submit Data</h1>
+    <form method="post">
+        {% csrf_token %}
+        <!-- Your form fields here -->
+        <input type="text" name="example_field" placeholder="Example">
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
