@@ -4,7 +4,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 
 class RegisterSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(required=True)
+    username = serializers.CharField()
     email = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
