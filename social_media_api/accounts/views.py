@@ -5,11 +5,16 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from .serializers import RegisterSerializer
 from django.contrib.auth import authenticate
+from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
+from django.contrib.auth import get_user_model  # Import to get the custom user model
+
+CustomUser = get_user_model()  # Reference to custom user model
+
 class RegisterUserView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
     def create(self, request, *args, **kwargs):
-     
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user, token = serializer.save()
@@ -19,6 +24,7 @@ class RegisterUserView(generics.CreateAPIView):
                 "message": "User created successfully"
             }, status=201)
         return Response(serializer.errors, status=400)
+
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         # Call the parent class to handle the normal token behavior
@@ -32,6 +38,7 @@ class CustomAuthToken(ObtainAuthToken):
             response.data['email'] = user.email
 
         return response
+
 class LoginUserView(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -47,10 +54,9 @@ class LoginUserView(generics.GenericAPIView):
                 "token": token.key
             })
         return Response({"detail": "Invalid credentials"}, status=400)
-CustomUser = get_user_model()
 
 class FollowUserView(APIView):
-    permission_classes = IsAuthenticated
+    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can access this view
 
     def post(self, request, user_id):
         # Get the user to follow
@@ -67,7 +73,7 @@ class FollowUserView(APIView):
         return Response({"detail": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
 
 class UnfollowUserView(APIView):
-    permission_classes = IsAuthenticated
+    permission_classes = [IsAuthenticated]  # Ensure that only authenticated users can access this view
 
     def post(self, request, user_id):
         # Get the user to unfollow
@@ -81,4 +87,4 @@ class UnfollowUserView(APIView):
 
         # Remove the follow
         user.following.remove(user_to_unfollow)
-        return Response({"detail": f"You have unfollowed {user_to_unfollow.username}."}, status=status.HTTP_200_OK)
+        return Response({"detail": f"You have unfollowed {user_to_unfollow.username}."}, status=status.HTTP_200_OK
