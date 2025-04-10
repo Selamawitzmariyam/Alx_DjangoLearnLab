@@ -8,9 +8,7 @@ class RegisterUserView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
     def create(self, request, *args, **kwargs):
-        """
-        Handle user registration and return user data along with authentication token.
-        """
+     
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user, token = serializer.save()
@@ -48,3 +46,38 @@ class LoginUserView(generics.GenericAPIView):
                 "token": token.key
             })
         return Response({"detail": "Invalid credentials"}, status=400)
+CustomUser = get_user_model()
+
+class FollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        # Get the user to follow
+        user_to_follow = CustomUser.objects.filter(id=user_id).first()
+        if not user_to_follow:
+            raise NotFound("User not found")
+
+        user = request.user
+        if user == user_to_follow:
+            return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Add the follow
+        user.following.add(user_to_follow)
+        return Response({"detail": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
+
+class UnfollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        # Get the user to unfollow
+        user_to_unfollow = CustomUser.objects.filter(id=user_id).first()
+        if not user_to_unfollow:
+            raise NotFound("User not found")
+
+        user = request.user
+        if user == user_to_unfollow:
+            return Response({"detail": "You cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Remove the follow
+        user.following.remove(user_to_unfollow)
+        return Response({"detail": f"You have unfollowed {user_to_unfollow.username}."}, status=status.HTTP_200_OK)
