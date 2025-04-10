@@ -1,33 +1,38 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework import status, permissions
-from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+from .serializers import RegisterSerializer
+from django.contrib.auth import authenticate
 
-from django.contrib.auth import get_user_model
-from .serializers import RegisterSerializer, UserSerializer
+class RegisterUserView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
 
-User = get_user_model()
-
-class RegisterView(APIView):
-    def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
+    def create(self, request, *args, **kwargs):
+        """
+        Handle user registration and return user data along with authentication token.
+        """
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
+            user, token = serializer.save()
             return Response({
-                "user": UserSerializer(user).data,
-                "token": Token.objects.get(user=user).key
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                "user": serializer.data,
+                "token": token.key,
+                "message": "User created successfully"
+            }, status=201)
+        return Response(serializer.errors, status=400)
 
-class CustomAuthToken(ObtainAuthToken):
+class LoginUserView(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
+
     def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        token = Token.objects.get(key=response.data['token'])
-        user = token.user
-        return Response({
-            'token': token.key,
-            'user_id': user.pk,
-            'username': user.username,
-        })
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({
+                "token": token.key
+            })
+        return Response({"detail": "Invalid credentials"}, status=400)
